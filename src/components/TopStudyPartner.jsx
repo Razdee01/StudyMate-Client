@@ -1,9 +1,8 @@
 import React, { use } from "react";
+import { Link } from "react-router";
 
 const TopStudyPartner = ({ topPartnersPromise }) => {
   const topPartnersData = use(topPartnersPromise);
-
-  
 
   return (
     <>
@@ -16,7 +15,7 @@ const TopStudyPartner = ({ topPartnersPromise }) => {
             {topPartnersData.map((partner) => (
               <div
                 key={partner.id}
-                className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-xl transition-shadow duration-300"
+                className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center transform transition duration-300 hover:scale-105"
               >
                 <img
                   src={partner.profileimage}
@@ -33,9 +32,14 @@ const TopStudyPartner = ({ topPartnersPromise }) => {
                 <p className="text-yellow-500 font-semibold mb-4">
                   ⭐ {partner.rating}
                 </p>
-                <button className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors">
-                  View Profile
-                </button>
+               
+                  <Link
+                    to={`/partners/${partner.id}`}
+                    className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors"
+                  >
+                    View Profile
+                  </Link>
+                
               </div>
             ))}
           </div>

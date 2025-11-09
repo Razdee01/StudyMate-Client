@@ -9,6 +9,7 @@ import Home from './pages/Home.jsx';
 import FindPartners from './pages/FindPartners.jsx';
 import CreatePartnerProfile from './pages/CreatePartnerProfile.jsx';
 import MyConnections from './pages/MyConnections.jsx';
+import PartnerDetails from './components/PartnerDetails.jsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,12 @@ const router = createBrowserRouter([
       { path: "/find-partners", Component: FindPartners },
       { path: "/create-partner-profile", Component: CreatePartnerProfile },
       { path: "/my-connections", Component: MyConnections },
+      {
+        path: "partners/:id",
+        element: <PartnerDetails />,
+        loader: ({ params }) =>
+          fetch(`http://localhost:3000/partners/${params.id}`),
+      },
     ],
   },
 ]);
