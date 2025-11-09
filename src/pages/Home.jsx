@@ -4,7 +4,12 @@ import TopStudyPartner from '../components/TopStudyPartner';
 import HowItWorks from '../components/HowItWorks';
 import Testimonials from '../components/Testimonials';
 
+const topPartnersPromise = fetch(
+  "http://localhost:3000/top-study-partners"
+).then((res) => res.json());
 const Home = () => {
+  
+
     return (
       <div>
         <div className="min-h-screen">
@@ -12,7 +17,9 @@ const Home = () => {
           <HeroSlider></HeroSlider>
 
           {/* Top Study Partners Section */}
-          <TopStudyPartner></TopStudyPartner>
+          <TopStudyPartner
+            topPartnersPromise={topPartnersPromise}
+          ></TopStudyPartner>
           {/* You'll add your dynamic partner cards here later */}
 
           {/* How It Works */}

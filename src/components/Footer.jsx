@@ -8,16 +8,16 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-black/80 text-slate-200 py-10">
+    <footer className="bg-slate-900 text-slate-200 py-10 w-full">
       {/* Container */}
       <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between gap-10 md:gap-20">
         {/* Left Section: Logo + Description */}
         <div className="flex-1 text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-3 mb-3">
             <img
-              src="https://i.ibb.co.com/vbTrKzf/Study-Mate-logo.png"
-              alt="StudyMate Logo"
               className="h-10 w-10 rounded-xl"
+              src="https://i.ibb.co.com/vbTrKzf/Study-Mate-logo.png"
+              alt=""
             />
             <h2 className="text-2xl font-bold text-sky-400">StudyMate</h2>
           </div>

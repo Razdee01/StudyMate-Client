@@ -1,81 +1,107 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
+const slidesData = [
+  {
+    id: 1,
+    title: "Find Your Perfect ",
+    highlight: "Study Partner",
+    description:
+      "Connect with learners who share your goals and study interests.",
+    buttonText: "Get Started",
+    bgClass: "from-sky-700 to-indigo-900",
+  },
+  {
+    id: 2,
+    title: "Collaborate. Learn. ",
+    highlight: "Grow Together.",
+    description: "Build motivation and accountability with peers.",
+    buttonText: "Explore Partners",
+    bgClass: "from-indigo-800 to-sky-900",
+  },
+  {
+    id: 3,
+    title: "Build Knowledge, ",
+    highlight: "Together",
+    description: "Create your profile and achieve more with teamwork.",
+    buttonText: "Join Now",
+    bgClass: "from-sky-800 to-indigo-950",
+  },
+];
 
 const HeroSlider = () => {
-    useEffect(() => {
-      const slides = document.querySelectorAll(".carousel-item");
-      let index = 0;
-      const interval = setInterval(() => {
-        index = (index + 1) % slides.length;
-        slides[index].scrollIntoView({ behavior: "smooth" });
-      }, 4000);
-      return () => clearInterval(interval);
-    }, []);
-      
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slidesData.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToSlide = (index) => setCurrentIndex(index);
+
   return (
-    <div className="w-full h-[80vh] carousel rounded-none overflow-hidden">
-      {/* Slide 1 */}
-      <div id="slide1" className="carousel-item relative w-full">
-        <div className="w-full h-[80vh] bg-gradient-to-r from-sky-700 to-indigo-900 flex flex-col justify-center items-center text-white text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Find Your Perfect{" "}
-            <span className="text-sky-300">Study Partner</span>
-          </h1>
-          <p className="text-lg mb-6 max-w-2xl">
-            Connect with learners who share your goals and study interests.
-          </p>
-          <button className="btn btn-primary">Get Started</button>
-        </div>
-        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-          <a href="#slide3" className="btn btn-circle">
-            ❮
-          </a>
-          <a href="#slide2" className="btn btn-circle">
-            ❯
-          </a>
-        </div>
+    <div className="w-full overflow-hidden relative">
+      {/* Slider container */}
+      <div
+        className="flex transition-transform duration-700 ease-in-out"
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
+        {slidesData.map((slide) => (
+          <div
+            key={slide.id}
+            className={`flex-shrink-0 w-full h-[50vh] sm:h-[60vh] md:h-[80vh] flex justify-center items-center bg-gradient-to-r ${slide.bgClass}`}
+          >
+            {/* Content wrapper with padding */}
+            <div className="text-center px-4 sm:px-6 md:px-8 flex flex-col justify-center items-center">
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3 sm:mb-4">
+                {slide.title}
+                <span className="text-sky-300">{slide.highlight}</span>
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 max-w-xl sm:max-w-2xl">
+                {slide.description}
+              </p>
+              <button className="btn btn-primary text-sm sm:text-base">
+                {slide.buttonText}
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Slide 2 */}
-      <div id="slide2" className="carousel-item relative w-full">
-        <div className="w-full h-[80vh] bg-gradient-to-r from-indigo-800 to-sky-900 flex flex-col justify-center items-center text-white text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Collaborate. Learn.{" "}
-            <span className="text-sky-300">Grow Together.</span>
-          </h1>
-          <p className="text-lg mb-6 max-w-2xl">
-            Build motivation and accountability with peers.
-          </p>
-          <button className="btn btn-primary">Explore Partners</button>
-        </div>
-        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-          <a href="#slide1" className="btn btn-circle">
-            ❮
-          </a>
-          <a href="#slide3" className="btn btn-circle">
-            ❯
-          </a>
-        </div>
+      {/* Navigation Dots */}
+      <div className="absolute bottom-3 sm:bottom-5 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-3">
+        {slidesData.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => goToSlide(idx)}
+            className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${
+              currentIndex === idx ? "bg-white" : "bg-gray-400"
+            }`}
+          ></button>
+        ))}
       </div>
 
-      {/* Slide 3 */}
-      <div id="slide3" className="carousel-item relative w-full">
-        <div className="w-full h-[80vh] bg-gradient-to-r from-sky-800 to-indigo-950 flex flex-col justify-center items-center text-white text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Build Knowledge, <span className="text-sky-300">Together</span>
-          </h1>
-          <p className="text-lg mb-6 max-w-2xl">
-            Create your profile and achieve more with teamwork.
-          </p>
-          <button className="btn btn-primary">Join Now</button>
-        </div>
-        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-          <a href="#slide2" className="btn btn-circle">
-            ❮
-          </a>
-          <a href="#slide1" className="btn btn-circle">
-            ❯
-          </a>
-        </div>
+      {/* Prev/Next Arrows */}
+      <div className="absolute top-1/2 left-2 sm:left-5 transform -translate-y-1/2">
+        <button
+          onClick={() =>
+            goToSlide(
+              (currentIndex - 1 + slidesData.length) % slidesData.length
+            )
+          }
+          className="btn btn-circle btn-sm sm:btn-md"
+        >
+          ❮
+        </button>
+      </div>
+      <div className="absolute top-1/2 right-2 sm:right-5 transform -translate-y-1/2">
+        <button
+          onClick={() => goToSlide((currentIndex + 1) % slidesData.length)}
+          className="btn btn-circle btn-sm sm:btn-md"
+        >
+          ❯
+        </button>
       </div>
     </div>
   );

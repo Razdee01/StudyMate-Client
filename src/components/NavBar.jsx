@@ -105,7 +105,7 @@ const NavBar = () => {
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
-          <img src="" alt="photo" />
+          <img  alt="photo" />
         </div>
       </div>
     </>
