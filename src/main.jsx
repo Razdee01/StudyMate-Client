@@ -10,6 +10,8 @@ import FindPartners from './pages/FindPartners.jsx';
 import CreatePartnerProfile from './pages/CreatePartnerProfile.jsx';
 import MyConnections from './pages/MyConnections.jsx';
 import PartnerDetails from './components/PartnerDetails.jsx';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,13 @@ const router = createBrowserRouter([
         loader: ({ params }) =>
           fetch(`http://localhost:3000/partners/${params.id}`),
       },
+      {
+        path: "login",
+        Component:Login
+      },
+      {path: "register",
+       Component:Register
+      }
     ],
   },
 ]);

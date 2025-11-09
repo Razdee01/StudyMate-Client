@@ -19,6 +19,17 @@ const NavBar = () => {
     </li>,
 
     <li>
+        <li>
+        <NavLink to="/login" className={({ isActive }) =>
+            `mx-2 font-semibold ${
+                isActive
+                ? "text-primary border-b-2 border-blue-500"
+                : "text-gray-700"
+            }`
+        }>
+            Login/Register
+        </NavLink>
+        </li>
       <NavLink
         to="/find-partners"
         className={({ isActive }) =>

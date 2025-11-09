@@ -6,20 +6,24 @@ const PartnerDetails = () => {
     console.log(partner);
     
     return (
-      <div className="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 transform transition duration-300 hover:scale-105">
-        <div className="flex flex-col items-center text-center ">
-          <img
-            src={partner.profileimage}
-            alt={partner.name}
-            className="w-32 h-32 rounded-full border-4 border-green-500 shadow-md mb-4 object-cover"
-          />
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg transform transition duration-300 hover:scale-105">
+          {/* Profile Section */}
+          <div className="flex flex-col items-center text-center mb-6">
+            <img
+              src={partner.profileimage}
+              alt={partner.name}
+              className="w-32 h-32 rounded-full border-4 border-green-500 shadow-md mb-4 object-cover"
+            />
+            <h2 className="text-2xl font-bold text-gray-800 mb-1">
+              {partner.name}
+            </h2>
+            <p className="text-yellow-500 mb-2">⭐ {partner.rating}</p>
+            <p className="text-gray-500 text-sm">{partner.location}</p>
+          </div>
 
-          <h2 className="text-2xl font-bold text-gray-800 mb-1">
-            {partner.name}
-          </h2>
-          <p className="text-gray-500 text-sm mb-4">{partner.location}</p>
-
-          <div className="w-full bg-gray-50 p-4 rounded-xl mb-4 text-left space-y-1">
+          {/* Details Section */}
+          <div className="bg-gray-50 p-4 rounded-xl space-y-2 mb-6">
             <p>
               <span className="font-semibold text-gray-700">Subject:</span>{" "}
               {partner.subject}
@@ -33,12 +37,10 @@ const PartnerDetails = () => {
               {partner.availabilityTime}
             </p>
             <p>
-              <span className="font-semibold text-gray-700">Experience:</span>{" "}
+              <span className="font-semibold text-gray-700">
+                Experience Level:
+              </span>{" "}
               {partner.experienceLevel}
-            </p>
-            <p>
-              <span className="font-semibold text-gray-700">Rating:</span> ⭐{" "}
-              {partner.rating}
             </p>
             <p>
               <span className="font-semibold text-gray-700">
@@ -48,12 +50,10 @@ const PartnerDetails = () => {
             </p>
           </div>
 
-          <a
-           
-            className="bg-green-600 text-white px-6 py-2 rounded-xl shadow-md hover:bg-green-700 transition duration-300"
-          >
-            Contact Partner
-          </a>
+          {/* Action Button */}
+          <button className="w-full bg-green-600 text-white py-2 rounded-xl shadow-md hover:bg-green-700 transition duration-300">
+            Send Partner Request
+          </button>
         </div>
       </div>
     );
