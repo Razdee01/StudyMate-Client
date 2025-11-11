@@ -1,9 +1,22 @@
 
-import { NavLink } from "react-router";
+import { use } from "react";
+import { NavLink, useNavigate } from "react-router";
+import { AuthContext } from "../contexts/AuthContext";
 
 
 const NavBar = () => {
- 
+  const navigate = useNavigate();
+ const { user, LogOut } = use(AuthContext);
+const handleLogout=()=>{
+  LogOut()
+    .then(() => {
+      console.log("logged out successfully")
+      navigate("/login");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
   
   const links = (
     <>
@@ -21,66 +34,69 @@ const NavBar = () => {
           Home
         </NavLink>
       </li>
+      {user ? (
+        <>
+          <li>
+            <NavLink
+              to="/find-partners"
+              className={({ isActive }) =>
+                `mx-2 font-semibold ${
+                  isActive
+                    ? "text-primary border-b-2 border-blue-500"
+                    : "text-gray-700"
+                }`
+              }
+            >
+              Find Partners
+            </NavLink>
+          </li>
 
-      <li>
-        <NavLink
-          to="/login"
-          className={({ isActive }) =>
-            `mx-2 font-semibold ${
-              isActive
-                ? "text-primary border-b-2 border-blue-500"
-                : "text-gray-700"
-            }`
-          }
-        >
-          Login / Register
-        </NavLink>
-      </li>
+          <li>
+            <NavLink
+              to="/create-partner-profile"
+              className={({ isActive }) =>
+                `mx-2 font-semibold ${
+                  isActive
+                    ? "text-primary border-b-2 border-blue-500"
+                    : "text-gray-700"
+                }`
+              }
+            >
+              Create Partner Profile
+            </NavLink>
+          </li>
 
-      <li>
-        <NavLink
-          to="/find-partners"
-          className={({ isActive }) =>
-            `mx-2 font-semibold ${
-              isActive
-                ? "text-primary border-b-2 border-blue-500"
-                : "text-gray-700"
-            }`
-          }
-        >
-          Find Partners
-        </NavLink>
-      </li>
-
-      <li>
-        <NavLink
-          to="/create-partner-profile"
-          className={({ isActive }) =>
-            `mx-2 font-semibold ${
-              isActive
-                ? "text-primary border-b-2 border-blue-500"
-                : "text-gray-700"
-            }`
-          }
-        >
-          Create Partner Profile
-        </NavLink>
-      </li>
-
-      <li>
-        <NavLink
-          to="/my-connections"
-          className={({ isActive }) =>
-            `mx-2 font-semibold ${
-              isActive
-                ? "text-primary border-b-2 border-blue-500"
-                : "text-gray-700"
-            }`
-          }
-        >
-          My Connections
-        </NavLink>
-      </li>
+          <li>
+            <NavLink
+              to="/my-connections"
+              className={({ isActive }) =>
+                `mx-2 font-semibold ${
+                  isActive
+                    ? "text-primary border-b-2 border-blue-500"
+                    : "text-gray-700"
+                }`
+              }
+            >
+              My Connections
+            </NavLink>
+          </li>
+        </>
+      ) : (
+        <li>
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
+              `mx-2 font-semibold ${
+                isActive
+                  ? "text-primary border-b-2 border-blue-500"
+                  : "text-gray-700"
+              }`
+            }
+          >
+            Login / Register
+          </NavLink>
+        </li>
+      )}
     </>
   );
 
@@ -127,7 +143,46 @@ const NavBar = () => {
       </div>
 
       <div className="navbar-end">
-        <img alt="photo" />
+        {user ? (
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
+                <img
+                  src={
+                    user.photoURL ||
+                    "https://i.ibb.co.com/Yc3Wm9n/default-avatar.png"
+                  }
+                  alt="User Avatar"
+                />
+              </div>
+            </div>
+
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box mt-3 w-52 shadow"
+            >
+              <li>
+                <NavLink to="/profile" className="text-center font-semibold">
+                  Profile
+                </NavLink>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="font-semibold"
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        ) : (
+        ""
+        )}
       </div>
     </div>
   );

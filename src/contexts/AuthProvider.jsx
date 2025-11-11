@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import { auth } from '../fireBase/fireBase.init';
 
 
@@ -13,34 +13,20 @@ const AuthProvider = ({children}) => {
     const createUser = ( email, password) => {
         setLoading(true)
       return createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed up
-          const user = userCredential.user;
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
-        });
+   
     };
-     const signIn=(email,password)=>{
-        signInWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.log(user);
-            
-            // ...
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-          });
-     }
+    const signIn = (email, password) => {
+      setLoading(true);
+      return signInWithEmailAndPassword(auth, email, password);
+    };
+    
      const signInWithGoogle=()=>{
         setLoading(true)
         return signInWithPopup(auth,googleProvider)
+     }
+     const LogOut=()=>{
+        setLoading(true)
+        return signOut(auth);
      }
      useEffect(()=>{
         const unsubcribe=onAuthStateChanged(auth,(curretUser)=>{
@@ -58,6 +44,7 @@ const AuthProvider = ({children}) => {
       signIn,
       signInWithGoogle,
       setUser,
+       LogOut
     };
     return <AuthContext value={authInfo}>
         {children}

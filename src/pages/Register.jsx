@@ -1,18 +1,71 @@
 import React, { use } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
+import Swal from "sweetalert2";
 
 const Register = () => {
-  const { signInWithGoogle } = use(AuthContext);
+  const { signInWithGoogle, createUser, setUser } = use(AuthContext);
   const handleGoogleSignIn=()=>{
     signInWithGoogle()
       .then((result) => {
-        console.log(result);
+       setUser(result);
+       Swal.fire({
+         icon: "success",
+         title: "Registration Successful!",
+         showConfirmButton: false,
+         timer: 2000,
+       });
+       navigate("/");
       })
       .catch((error) => {
-        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: error.message,
+        });
       });
   }
+  const navigate = useNavigate();
+  const handleRegister=(e)=>{
+    e.preventDefault();
+    const form=e.target;
+    // const name=form.name.value;
+    // const photoURL=form.photoURL.value;
+    const email=form.email.value;
+    const password=form.password.value;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Password",
+        text: "Password must have at least 1 uppercase, 1 lowercase, and be at least 6 characters long.",
+      });
+      return;
+    }
+
+
+    createUser(email, password)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+        Swal.fire({
+          icon: "success",
+          title: "Registration Successful!",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        navigate("/");
+      })
+      .catch((error) => {
+       
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: error.message,
+        });
+      });
+  
+  } 
   return (
     <div>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -23,12 +76,13 @@ const Register = () => {
           </h2>
 
           {/* Form */}
-          <form className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
             <div>
               <label className="block text-gray-700 font-semibold mb-1">
                 Name
               </label>
               <input
+                name="name"
                 type="text"
                 placeholder="Enter your name"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -40,6 +94,7 @@ const Register = () => {
                 Email
               </label>
               <input
+                name="email"
                 type="email"
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -51,6 +106,7 @@ const Register = () => {
                 Photo URL
               </label>
               <input
+                name="photoURL"
                 type="text"
                 placeholder="Enter your photo URL"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -62,6 +118,7 @@ const Register = () => {
                 Password
               </label>
               <input
+                name="password"
                 type="password"
                 placeholder="Enter your password"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -69,6 +126,7 @@ const Register = () => {
             </div>
 
             <button
+           
               type="submit"
               className="w-full bg-green-600 text-white py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300"
             >
@@ -122,7 +180,7 @@ const Register = () => {
                 ></path>
               </g>
             </svg>
-            Login with Google
+            Continue with Google
           </button>
         </div>
       </div>

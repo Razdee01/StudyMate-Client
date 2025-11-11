@@ -13,6 +13,7 @@ import PartnerDetails from './components/PartnerDetails.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import AuthProvider from './contexts/AuthProvider.jsx';
+import PrivetRoutes from './components/PrivetRoutes.jsx';
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,9 @@ const router = createBrowserRouter([
       { path: "/my-connections", Component: MyConnections },
       {
         path: "partners/:id",
-        element: <PartnerDetails />,
+        element: <PrivetRoutes>
+          <PartnerDetails />
+        </PrivetRoutes>,
         loader: ({ params }) =>
           fetch(`http://localhost:3000/partners/${params.id}`),
       },
