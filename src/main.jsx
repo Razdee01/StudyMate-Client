@@ -14,6 +14,7 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import AuthProvider from './contexts/AuthProvider.jsx';
 import PrivetRoutes from './components/PrivetRoutes.jsx';
+import Profile from './components/Profile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: "/find-partners", Component: FindPartners },
       { path: "/create-partner-profile", Component: CreatePartnerProfile },
       { path: "/my-connections", Component: MyConnections },
+      { path: "/profile", Component: Profile },
       {
         path: "partners/:id",
         element: <PrivetRoutes>
