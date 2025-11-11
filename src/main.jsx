@@ -15,11 +15,13 @@ import Register from './pages/Register.jsx';
 import AuthProvider from './contexts/AuthProvider.jsx';
 import PrivetRoutes from './components/PrivetRoutes.jsx';
 import Profile from './components/Profile.jsx';
+import ErrorPage from './components/ErrorPage.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: MainLayout,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       { index: true, Component: Home },
       { path: "/find-partners", Component: FindPartners },

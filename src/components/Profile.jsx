@@ -15,12 +15,7 @@ const Profile = () => {
         />
         <h2 className="text-2xl font-semibold mb-2">{user.displayName}</h2>
         <p className="text-gray-600 mb-4">{user.email}</p>
-        {/* <button
-          onClick={() => navigate("/edit-profile")} // optional edit profile page
-          className="btn btn-primary"
-        >
-          Edit Profile
-        </button> */}
+        
       </div>
     </div>
   );
