@@ -156,7 +156,7 @@ const handleLogout=()=>{
                     user.photoURL ||
                     "https://i.ibb.co.com/Yc3Wm9n/default-avatar.png"
                   }
-                  alt="User Avatar"
+                  alt=""
                 />
               </div>
             </div>

@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router";
+import { AuthContext } from "../contexts/AuthContext";
 
 const slidesData = [
   {
@@ -9,6 +11,7 @@ const slidesData = [
       "Connect with learners who share your goals and study interests.",
     buttonText: "Get Started",
     bgClass: "from-sky-700 to-indigo-900",
+    path: "/find-partners",
   },
   {
     id: 2,
@@ -17,6 +20,7 @@ const slidesData = [
     description: "Build motivation and accountability with peers.",
     buttonText: "Explore Partners",
     bgClass: "from-indigo-800 to-sky-900",
+    path: "/my-connections",
   },
   {
     id: 3,
@@ -25,11 +29,14 @@ const slidesData = [
     description: "Create your profile and achieve more with teamwork.",
     buttonText: "Join Now",
     bgClass: "from-sky-800 to-indigo-950",
+    path: "/create-partner-profile",
   },
 ];
 
 const HeroSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,6 +46,14 @@ const HeroSlider = () => {
   }, []);
 
   const goToSlide = (index) => setCurrentIndex(index);
+
+  const handleButtonClick = (path) => {
+    if (user) {
+      navigate(path); 
+    } else {
+      navigate("/login"); 
+    }
+  };
 
   return (
     <div className="w-full overflow-hidden relative">
@@ -50,9 +65,8 @@ const HeroSlider = () => {
         {slidesData.map((slide) => (
           <div
             key={slide.id}
-            className={`flex-shrink-0 w-full h-[50vh] sm:h-[60vh] md:h-[80vh] flex justify-center items-center bg-gradient-to-r ${slide.bgClass}`}
+            className={`shrink-0 w-full h-[50vh] sm:h-[60vh] md:h-[80vh] flex justify-center items-center bg-linear-to-r ${slide.bgClass}`}
           >
-            {/* Content wrapper with padding */}
             <div className="text-center px-4 sm:px-6 md:px-8 flex flex-col justify-center items-center">
               <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3 sm:mb-4">
                 {slide.title}
@@ -61,9 +75,14 @@ const HeroSlider = () => {
               <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 max-w-xl sm:max-w-2xl">
                 {slide.description}
               </p>
-              <button className="btn btn-primary text-sm sm:text-base">
-                {slide.buttonText}
-              </button>
+              <div>
+                <button
+                  onClick={() => handleButtonClick(slide.path)}
+                  className="btn btn-primary text-sm sm:text-base"
+                >
+                  {slide.buttonText}
+                </button>
+              </div>
             </div>
           </div>
         ))}
