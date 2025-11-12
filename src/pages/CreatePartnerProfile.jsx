@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const CreatePartnerProfile = () => {
   const { user } = useContext(AuthContext);
-
+  const navigation = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -31,19 +32,34 @@ const CreatePartnerProfile = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Partner added successfully:", data);
-
-       
-        Swal.fire({
-          icon: "success",
-          title: "Profile Created!",
-          text: "Your partner profile has been successfully created.",
-          confirmButtonText: "OK",
-          confirmButtonColor: "#1E40AF",
-        });
+        console.log("Partner added:", data);
+    
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Profile Created!",
+            text: data.message || "Your partner profile has been successfully created.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#1E40AF",
+          });
+          navigation("/find-partners");
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Unable to create!",
+            text: data.message || "A profile already exists with this email.",
+            confirmButtonText: "Try Again",
+            confirmButtonColor: "#DC2626",
+          });
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Something went wrong",
+          text: "Please try again later.",
+        });
       });
   };
 
@@ -167,7 +183,7 @@ const CreatePartnerProfile = () => {
             <input
               type="email"
               name="email"
-              value={user?.email}
+              value={user?.email || ""}
               className="input input-bordered w-full"
               readOnly
             />
