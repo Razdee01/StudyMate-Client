@@ -1,9 +1,48 @@
-import React from "react";
+import React, { use, useState } from "react";
 import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
+import { AuthContext } from "../contexts/AuthContext";
 
 const PartnerDetails = () => {
+  const{user}=use(AuthContext)
   const partner = useLoaderData();
- 
+ const[req,setReq]=useState(false);
+  const handleRequest = () => {
+    
+    fetch("http://localhost:3000/requests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        partnerId: partner._id,
+        partnerName: partner.name,
+        partnerSubject: partner.subject,
+        studyMode: partner.studyMode,
+        availabilityTime: partner.availabilityTime,
+        experienceLevel: partner.experienceLevel,
+        partnerCount: partner.partnerCount+1,
+        sent_by: user?.email,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success){
+          Swal.fire({
+            title: `Partner Request Sent to ${partner.name}!`,
+            icon: "success",
+            draggable: true,
+          });
+          setReq(true);
+          partner.partnerCount += 1;
+        }
+      
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+  };
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
@@ -49,8 +88,16 @@ const PartnerDetails = () => {
         </div>
 
         {/* Action Button */}
-        <button className="w-full bg-green-600 text-white py-2 rounded-xl shadow-md hover:bg-green-700 transition duration-300">
-          Send Partner Request
+        <button
+          onClick={handleRequest}
+         disabled={req}
+          className={`w-full py-2 rounded-xl shadow-md transition duration-300 ${
+            req
+              ? "bg-gray-400 text-white  "
+              : "bg-green-600 hover:bg-green-700 text-white"
+          }`}
+        >
+          {req ? "Request Sent" : "Send Partner Request"}
         </button>
       </div>
     </div>
