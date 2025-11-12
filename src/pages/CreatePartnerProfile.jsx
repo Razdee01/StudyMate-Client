@@ -1,31 +1,51 @@
-import React, { useContext,} from "react";
-
+import React, { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import Swal from "sweetalert2";
 
 const CreatePartnerProfile = () => {
   const { user } = useContext(AuthContext);
 
-
-
- 
-
-  
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    // You will implement sending data to server here
-    
-    Swal.fire({
-      icon: "success",
-      title: "Profile Created!",
-      text: "Your partner profile has been successfully created.",
-      confirmButtonText: "OK",
-      confirmButtonColor: "#1E40AF", // optional: Tailwind primary color
-    });
+    const form = e.target;
+
+    const partnerData = {
+      name: form.name.value,
+      profileimage: form.profileImage.value,
+      subject: form.subject.value,
+      studyMode: form.studyMode.value,
+      availabilityTime: form.availability.value,
+      location: form.location.value,
+      experienceLevel: form.experienceLevel.value,
+      rating: form.rating.value,
+      partnerCount: form.partnerCount.value,
+      email: form.email.value,
+    };
+
+    fetch("http://localhost:3000/partners", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(partnerData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Partner added successfully:", data);
+
+       
+        Swal.fire({
+          icon: "success",
+          title: "Profile Created!",
+          text: "Your partner profile has been successfully created.",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#1E40AF",
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
-
-
 
   return (
     <div className="min-h-screen flex justify-center items-start bg-gray-100 py-10">
@@ -40,8 +60,6 @@ const CreatePartnerProfile = () => {
             <input
               type="text"
               name="name"
-            
-          
               placeholder="Your full name"
               className="input input-bordered w-full"
               required
@@ -54,8 +72,6 @@ const CreatePartnerProfile = () => {
             <input
               type="text"
               name="profileImage"
-             
-            
               placeholder="Image URL"
               className="input input-bordered w-full"
               required
@@ -68,7 +84,6 @@ const CreatePartnerProfile = () => {
             <input
               type="text"
               name="subject"
-            
               placeholder="e.g., English, Math, Programming"
               className="input input-bordered w-full"
               required
@@ -78,12 +93,7 @@ const CreatePartnerProfile = () => {
           {/* Study Mode */}
           <div>
             <label className="block mb-1 font-medium">Study Mode</label>
-            <select
-              name="studyMode"
-              
-             
-              className="select select-bordered w-full"
-            >
+            <select name="studyMode" className="select select-bordered w-full">
               <option>Online</option>
               <option>Offline</option>
             </select>
@@ -95,8 +105,6 @@ const CreatePartnerProfile = () => {
             <input
               type="text"
               name="availability"
-            
-              
               placeholder="e.g., Evening 6–9 PM"
               className="input input-bordered w-full"
             />
@@ -108,8 +116,6 @@ const CreatePartnerProfile = () => {
             <input
               type="text"
               name="location"
-            
-            
               placeholder="City or Area"
               className="input input-bordered w-full"
             />
@@ -120,8 +126,6 @@ const CreatePartnerProfile = () => {
             <label className="block mb-1 font-medium">Experience Level</label>
             <select
               name="experienceLevel"
-         
-              
               className="select select-bordered w-full"
             >
               <option>Beginner</option>
@@ -136,8 +140,7 @@ const CreatePartnerProfile = () => {
             <input
               type="number"
               name="rating"
-             value={0}
-             
+              value={3.5}
               className="input input-bordered w-full"
               min={0}
               max={5}
@@ -151,8 +154,7 @@ const CreatePartnerProfile = () => {
             <input
               type="number"
               name="partnerCount"
-             value={0}
-        
+              value={0}
               className="input input-bordered w-full"
               min={0}
               readOnly
