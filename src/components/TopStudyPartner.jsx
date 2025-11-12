@@ -35,7 +35,7 @@ const TopStudyPartner = ({ topPartnersPromise }) => {
                
                   <Link
                     to={`/partners/${partner.id}`}
-                    className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition-colors"
+                    className="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark  transition-colors"
                   >
                     View Profile
                   </Link>
