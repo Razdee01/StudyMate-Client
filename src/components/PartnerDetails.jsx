@@ -8,6 +8,8 @@ const PartnerDetails = () => {
   const partner = useLoaderData();
  const[req,setReq]=useState(false);
   const handleRequest = () => {
+  
+
     
     fetch("http://localhost:3000/requests", {
       method: "POST",
@@ -23,10 +25,19 @@ const PartnerDetails = () => {
         experienceLevel: partner.experienceLevel,
         partnerCount: partner.partnerCount+1,
         sent_by: user?.email,
+        
       }),
     })
       .then((res) => res.json())
       .then((data) => {
+        if (user?.email === partner.email) {
+          Swal.fire({
+            icon: "warning",
+            title: "You cannot send a request to yourself!",
+          });
+          return;
+        }
+        
         if (data.success){
           Swal.fire({
             title: `Partner Request Sent to ${partner.name}!`,
@@ -41,8 +52,10 @@ const PartnerDetails = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
+      
 
   };
+  console.log("Sending request for partnerId:", partner._id);
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">

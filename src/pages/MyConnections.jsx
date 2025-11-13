@@ -1,82 +1,103 @@
-import React, { useContext, useEffect } from "react";
-import { useNavigate } from "react-router";
+import React, { useEffect, useState, useContext } from "react";
+import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
+import UpdatePartner from "../components/UpdatePartner";
 
-const MyConnectionsDemo = () => {
+const MyConnections = () => {
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [requests, setRequests] = useState([]);
+  const [editingRequest, setEditingRequest] = useState(null);
 
+  // 🟢 Fetch all requests SENT by the logged-in user
   useEffect(() => {
-    if (!user) navigate("/login"); // private route
-  }, [user, navigate]);
+    if (!user?.email) return;
+    fetch(`http://localhost:3000/requests/sent/${user.email}`)
+      .then((res) => res.json())
+      .then((data) => setRequests(data))
+      .catch((err) => console.error("Error fetching sent requests:", err));
+  }, [user]);
 
-  if (!user) return null; // prevent rendering before redirect
-
-  // Static data for demo
-  const connections = [
-    {
-      id: 1,
-      name: "Alice Johnson",
-      profileImage: "https://via.placeholder.com/40",
-      subject: "English",
-      studyMode: "Online",
-    },
-    {
-      id: 2,
-      name: "Bob Smith",
-      profileImage: "https://via.placeholder.com/40",
-      subject: "Math",
-      studyMode: "Offline",
-    },
-    {
-      id: 3,
-      name: "Charlie Lee",
-      profileImage: "https://via.placeholder.com/40",
-      subject: "Programming",
-      studyMode: "Online",
-    },
-  ];
+  // 🗑️ Delete request
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:3000/requests/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.deletedCount > 0) {
+              Swal.fire(
+                "Deleted!",
+                "Your request has been deleted.",
+                "success"
+              );
+              setRequests(requests.filter((req) => req._id !== id));
+            }
+          });
+      }
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">My Connections</h1>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">My Connections</h2>
+      <table className="min-w-full border">
+        <thead>
+          <tr>
+            <th className="border px-4 py-2">Partner Name</th>
+            <th className="border px-4 py-2">Subject</th>
+            <th className="border px-4 py-2">Study Mode</th>
+            <th className="border px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {requests.map((req) => (
+            <tr key={req._id}>
+              <td className="border px-4 py-2">{req.partnerName}</td>
+              <td className="border px-4 py-2">{req.partnerSubject}</td>
+              <td className="border px-4 py-2">{req.studyMode}</td>
+              <td className="border px-4 py-2">
+                <button
+                  className="bg-yellow-400 px-2 py-1 rounded mr-2"
+                  onClick={() => setEditingRequest(req)}
+                >
+                  Update
+                </button>
+                <button
+                  className="bg-red-500 text-white px-2 py-1 rounded"
+                  onClick={() => handleDelete(req._id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-        <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
-              <tr>
-                <th>Partner</th>
-                <th>Subject</th>
-                <th>Study Mode</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {connections.map((conn) => (
-                <tr key={conn.id}>
-                  <td className="flex items-center gap-3">
-                    <img
-                      src={conn.profileImage}
-                      alt={conn.name}
-                      className="w-10 h-10 rounded-full"
-                    />
-                    <span>{conn.name}</span>
-                  </td>
-                  <td>{conn.subject}</td>
-                  <td>{conn.studyMode}</td>
-                  <td className="flex gap-2">
-                    <button className="btn btn-sm btn-warning">Update</button>
-                    <button className="btn btn-sm btn-error">Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* 🟢 Update modal */}
+      {editingRequest && (
+        <UpdatePartner
+          request={editingRequest}
+          onClose={() => setEditingRequest(null)}
+          onUpdate={(updatedReq) => {
+            setRequests((prev) =>
+              prev.map((r) => (r._id === updatedReq._id ? updatedReq : r))
+            );
+          }}
+        />
+      )}
     </div>
   );
 };
 
-export default MyConnectionsDemo;
+export default MyConnections;
