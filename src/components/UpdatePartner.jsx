@@ -3,23 +3,21 @@ import Swal from "sweetalert2";
 
 const UpdatePartner = ({ request, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
-    partnerName: request.partnerName || "",
-    partnerSubject: request.partnerSubject || "",
-    studyMode: request.studyMode || "",
-    availabilityTime: request.availabilityTime || "",
-    experienceLevel: request.experienceLevel || "",
+    partnerName: request.partnerName,
+    partnerSubject: request.partnerSubject,
+    studyMode: request.studyMode,
+    availabilityTime: request.availabilityTime,
+    experienceLevel: request.experienceLevel,
   });
 
-  // 🟢 Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // 🟢 Submit update
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/requests/${request._id}`, {
+    fetch(`study-mate-server-ten.vercel.app/requests/${request._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),

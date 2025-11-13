@@ -18,12 +18,12 @@ const CreatePartnerProfile = () => {
       availabilityTime: form.availability.value,
       location: form.location.value,
       experienceLevel: form.experienceLevel.value,
-      rating: form.rating.value,
-      partnerCount: form.partnerCount.value,
+      rating: parseFloat(form.rating.value),
+      partnerCount: parseInt(form.partnerCount.value),
       email: form.email.value,
     };
 
-    fetch("http://localhost:3000/partners", {
+    fetch("study-mate-server-ten.vercel.app/partners", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,12 +33,14 @@ const CreatePartnerProfile = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("Partner added:", data);
-    
+
         if (data.success) {
           Swal.fire({
             icon: "success",
             title: "Profile Created!",
-            text: data.message || "Your partner profile has been successfully created.",
+            text:
+              data.message ||
+              "Your partner profile has been successfully created.",
             confirmButtonText: "OK",
             confirmButtonColor: "#1E40AF",
           });
@@ -121,7 +123,7 @@ const CreatePartnerProfile = () => {
             <input
               type="text"
               name="availability"
-              placeholder="e.g., Evening 6–9 PM"
+              placeholder="e.g., Evening 6-9 PM"
               className="input input-bordered w-full"
             />
           </div>
@@ -156,7 +158,7 @@ const CreatePartnerProfile = () => {
             <input
               type="number"
               name="rating"
-              value={3.5}
+              value={0}
               className="input input-bordered w-full"
               min={0}
               max={5}

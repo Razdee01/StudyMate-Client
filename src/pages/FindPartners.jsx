@@ -6,10 +6,9 @@ import Loading from "../components/Loading";
 const FindPartners = () => {
   const [partners, setPartners] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); 
+  const [sortOrder, setSortOrder] = useState("asc");
   const [loading, setLoading] = useState(true);
 
- 
   const experienceRank = {
     Beginner: 3,
     Intermediate: 2,
@@ -18,42 +17,34 @@ const FindPartners = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/partners")
+      .get("study-mate-server-ten.vercel.app/partners")
       .then((res) => {
         setPartners(res.data);
         setLoading(false);
       })
       .catch(() => {
-      
         setLoading(false);
       });
   }, []);
 
   // --- Filter + Sort Logic ---
 
-  
   const filteredPartners = partners
     // 1️⃣ Search filter
     .filter((p) => {
-      
       const term = searchTerm.toLowerCase();
 
-      
       if (!searchTerm) {
         return partners;
       }
 
-     
       const nameMatch = p.name?.toLowerCase().includes(term);
       const subjectMatch = p.subject?.toLowerCase().includes(term);
 
-      
       return nameMatch || subjectMatch;
     })
 
-   
     .sort((a, b) => {
-   
       const aRank = experienceRank[a.experienceLevel] || 0;
       const bRank = experienceRank[b.experienceLevel] || 0;
 

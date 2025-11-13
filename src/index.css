@@ -1,7 +1,9 @@
 @import "tailwindcss";
-@plugin "daisyui"{
-  themes: light --default;
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
 }
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
@@ -10,4 +12,4 @@
 }
 
 
-/* #4b0082 */
+

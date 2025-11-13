@@ -4,14 +4,11 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
 
 const PartnerDetails = () => {
-  const{user}=use(AuthContext)
+  const { user } = use(AuthContext);
   const partner = useLoaderData();
- const[req,setReq]=useState(false);
+  const [req, setReq] = useState(false);
   const handleRequest = () => {
-  
-
-    
-    fetch("http://localhost:3000/requests", {
+    fetch("study-mate-server-ten.vercel.app/requests", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,9 +20,8 @@ const PartnerDetails = () => {
         studyMode: partner.studyMode,
         availabilityTime: partner.availabilityTime,
         experienceLevel: partner.experienceLevel,
-        partnerCount: partner.partnerCount+1,
+        partnerCount: partner.partnerCount + 1,
         sent_by: user?.email,
-        
       }),
     })
       .then((res) => res.json())
@@ -37,8 +33,8 @@ const PartnerDetails = () => {
           });
           return;
         }
-        
-        if (data.success){
+
+        if (data.success) {
           Swal.fire({
             title: `Partner Request Sent to ${partner.name}!`,
             icon: "success",
@@ -47,16 +43,13 @@ const PartnerDetails = () => {
           setReq(true);
           partner.partnerCount += 1;
         }
-      
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-      
-
   };
   console.log("Sending request for partnerId:", partner._id);
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg transform transition duration-300 hover:scale-105">
@@ -103,7 +96,7 @@ const PartnerDetails = () => {
         {/* Action Button */}
         <button
           onClick={handleRequest}
-         disabled={req}
+          disabled={req}
           className={`w-full py-2 rounded-xl shadow-md transition duration-300 ${
             req
               ? "bg-gray-400 text-white  "

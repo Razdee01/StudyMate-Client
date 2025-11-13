@@ -8,39 +8,32 @@ const MyConnections = () => {
   const [requests, setRequests] = useState([]);
   const [editingRequest, setEditingRequest] = useState(null);
 
-  // 🟢 Fetch all requests SENT by the logged-in user
   useEffect(() => {
     if (!user?.email) return;
-    fetch(`http://localhost:3000/requests/sent/${user.email}`)
+    fetch(`study-mate-server-ten.vercel.app/requests/sent/${user.email}`)
       .then((res) => res.json())
-      .then((data) => setRequests(data))
-      .catch((err) => console.error("Error fetching sent requests:", err));
+      .then((data) => setRequests(data));
   }, [user]);
 
-  // 🗑️ Delete request
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "This request will be deleted.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#82A762",
+      cancelButtonColor: "#2E2EFF",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/requests/${id}`, {
+        fetch(`study-mate-server-ten.vercel.app/requests/${id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
           .then((data) => {
             if (data.deletedCount > 0) {
-              Swal.fire(
-                "Deleted!",
-                "Your request has been deleted.",
-                "success"
-              );
-              setRequests(requests.filter((req) => req._id !== id));
+              Swal.fire("Deleted!", "Request removed successfully!", "success");
+              setRequests(requests.filter((r) => r._id !== id));
             }
           });
       }
@@ -48,52 +41,57 @@ const MyConnections = () => {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">My Connections</h2>
-      <table className="min-w-full border">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Partner Name</th>
-            <th className="border px-4 py-2">Subject</th>
-            <th className="border px-4 py-2">Study Mode</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requests.map((req) => (
-            <tr key={req._id}>
-              <td className="border px-4 py-2">{req.partnerName}</td>
-              <td className="border px-4 py-2">{req.partnerSubject}</td>
-              <td className="border px-4 py-2">{req.studyMode}</td>
-              <td className="border px-4 py-2">
-                <button
-                  className="bg-yellow-400 px-2 py-1 rounded mr-2"
-                  onClick={() => setEditingRequest(req)}
-                >
-                  Update
-                </button>
-                <button
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                  onClick={() => handleDelete(req._id)}
-                >
-                  Delete
-                </button>
-              </td>
+    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
+      <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-(--color-primary)]">
+        My Connections
+      </h2>
+      <div className="overflow-x-auto">
+        <table className="w-full border border-(--color-primary) bg-white rounded-lg shadow-md text-sm sm:text-base">
+          <thead className="bg-(--color-primary) text-white">
+            <tr>
+              <th className="px-3 sm:px-4 py-2 border">Partner Name</th>
+              <th className="px-3 sm:px-4 py-2 border">Subject</th>
+              <th className="px-3 sm:px-4 py-2 border">Study Mode</th>
+              <th className="px-3 sm:px-4 py-2 border">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {requests.map((req) => (
+              <tr key={req._id} className="text-center hover:bg-gray-100">
+                <td className="border px-3 sm:px-4 py-2">{req.partnerName}</td>
+                <td className="border px-3 sm:px-4 py-2">
+                  {req.partnerSubject}
+                </td>
+                <td className="border px-3 sm:px-4 py-2">{req.studyMode}</td>
+                <td className="border px-3 sm:px-4 py-2">
+                  <button
+                    onClick={() => setEditingRequest(req)}
+                    className="bg-(--color-secondary) text-white px-2 sm:px-3 py-1 rounded mr-2"
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => handleDelete(req._id)}
+                    className="bg-red-500 text-white px-2 sm:px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      {/* 🟢 Update modal */}
       {editingRequest && (
         <UpdatePartner
           request={editingRequest}
           onClose={() => setEditingRequest(null)}
-          onUpdate={(updatedReq) => {
+          onUpdate={(updatedReq) =>
             setRequests((prev) =>
               prev.map((r) => (r._id === updatedReq._id ? updatedReq : r))
-            );
-          }}
+            )
+          }
         />
       )}
     </div>
