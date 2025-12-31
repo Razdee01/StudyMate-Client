@@ -8,7 +8,8 @@ const PartnerDetails = () => {
   const partner = useLoaderData();
   const [req, setReq] = useState(false);
   const handleRequest = () => {
-    fetch("study-mate-server-ten.vercel.app/requests", {
+    
+    fetch("https://study-mate-server-ten.vercel.app/requests", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

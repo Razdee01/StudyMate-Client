@@ -35,8 +35,13 @@ const router = createBrowserRouter([
             <PartnerDetails />
           </PrivetRoutes>
         ),
-        loader: ({ params }) =>
-          fetch(`study-mate-server-ten.vercel.app/partners/${params.id}`),
+        loader: async ({ params }) => {
+          const res = await fetch(
+            "https://study-mate-server-ten.vercel.app/partners"
+          );
+          const data = await res.json();
+          return data.find((p) => p._id === params.id || p.id === params.id);
+        },
       },
       {
         path: "login",

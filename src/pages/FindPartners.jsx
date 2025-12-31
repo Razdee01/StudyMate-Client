@@ -16,8 +16,10 @@ const FindPartners = () => {
   };
 
   useEffect(() => {
+    
     axios
-      .get("study-mate-server-ten.vercel.app/partners")
+      .get("https://study-mate-server-ten.vercel.app/partners")
+
       .then((res) => {
         setPartners(res.data);
         setLoading(false);
@@ -126,7 +128,7 @@ const FindPartners = () => {
                 </p>
                 <div className="card-actions mt-3">
                   <Link
-                    to={`/partners/${partner._id}`}
+                    to={`/partners/${partner._id || partner.id}`}
                     className="btn btn-sm btn-outline btn-primary"
                   >
                     View Profile
