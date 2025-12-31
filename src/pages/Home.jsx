@@ -5,7 +5,7 @@ import HowItWorks from "../components/HowItWorks";
 import Testimonials from "../components/Testimonials";
 
 const topPartnersPromise = fetch(
-  "study-mate-server-ten.vercel.app/top-study-partners"
+  "https://study-mate-server-ten.vercel.app/top-study-partners"
 ).then((res) => res.json());
 const Home = () => {
   return (
