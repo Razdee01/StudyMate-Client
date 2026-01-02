@@ -46,10 +46,10 @@ const AuthProvider = ({children}) => {
       setUser,
        LogOut
     };
-    return <AuthContext value={authInfo}>
+    return <AuthContext.Provider value={authInfo}>
         {children}
 
-    </AuthContext>;
+    </AuthContext.Provider>;
 };
 
 export default AuthProvider;

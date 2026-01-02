@@ -40,6 +40,7 @@ const NavBar = () => {
       });
   };
 
+  
   const links = (
     <>
       <li>
@@ -56,6 +57,21 @@ const NavBar = () => {
           Home
         </NavLink>
       </li>
+      <li>
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            `mx-2 font-semibold ${
+              isActive
+                ? "text-primary border-b-2 border-blue-500"
+                : "text-gray-700 dark:text-gray-300"
+            }`
+          }
+        >
+          About
+        </NavLink>
+      </li>
+
       {user ? (
         <>
           <li>
@@ -100,28 +116,43 @@ const NavBar = () => {
               My Connections
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                `mx-2 font-semibold ${
+                  isActive
+                    ? "text-primary border-b-2 border-blue-500"
+                    : "text-gray-700 dark:text-gray-300"
+                }`
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
         </>
       ) : (
-        <li>
-          <NavLink
-            to="/login"
-            className={({ isActive }) =>
-              `mx-2 font-semibold ${
-                isActive
-                  ? "text-primary border-b-2 border-blue-500"
-                  : "text-gray-700 dark:text-gray-300"
-              }`
-            }
-          >
-            Login / Register
-          </NavLink>
-        </li>
+        <>
+          <li>
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `mx-2 font-semibold ${
+                  isActive
+                    ? "text-primary border-b-2 border-blue-500"
+                    : "text-gray-700 dark:text-gray-300"
+                }`
+              }
+            >
+              Login / Register
+            </NavLink>
+          </li>
+        </>
       )}
     </>
   );
-
   return (
-    <div className="navbar bg-base-100 shadow-sm px-5">
+    <div className="navbar bg-base-100 shadow-sm px-5 sticky top-0 z-50">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -151,7 +182,7 @@ const NavBar = () => {
         <div className="flex items-center">
           <img
             className="h-10 w-10 rounded-xl"
-            src="https://i.ibb.co.com/vbTrKzf/Study-Mate-logo.png"
+            src="https://i.ibb.co.com/Pv09Fmv3/Your-paragraph-text.png"
             alt=""
           />
           <p className="text-2xl font-bold text-sky-400 ml-2">StudyMate</p>

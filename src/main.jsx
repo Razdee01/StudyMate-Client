@@ -16,6 +16,8 @@ import AuthProvider from "./contexts/AuthProvider.jsx";
 import PrivetRoutes from "./components/PrivetRoutes.jsx";
 import Profile from "./components/Profile.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
+import DashBoard from "./components/DashBoard.jsx";
+import About from "./pages/About.jsx";
 
 const router = createBrowserRouter([
   {
@@ -28,12 +30,14 @@ const router = createBrowserRouter([
       { path: "/create-partner-profile", Component: CreatePartnerProfile },
       { path: "/my-connections", Component: MyConnections },
       { path: "/profile", Component: Profile },
+      { path: "/dashboard", Component: DashBoard },
+      { path: "/about", Component: About },
       {
         path: "partners/:id",
         element: (
-          <PrivetRoutes>
+         
             <PartnerDetails />
-          </PrivetRoutes>
+        
         ),
         loader: async ({ params }) => {
           const res = await fetch(

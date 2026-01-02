@@ -5,131 +5,156 @@ import Loading from "../components/Loading";
 
 const FindPartners = () => {
   const [partners, setPartners] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedMode, setSelectedMode] = useState("");
+  const [sortOrder, setSortOrder] = useState("expert"); // expert or beginner
   const [loading, setLoading] = useState(true);
 
-  const experienceRank = {
-    Beginner: 3,
-    Intermediate: 2,
-    Expert: 1,
-  };
+  // Get unique options
+  const subjects = [...new Set(partners.map((p) => p.subject))];
+  const modes = [...new Set(partners.map((p) => p.studyMode))];
 
   useEffect(() => {
-    
     axios
       .get("https://study-mate-server-ten.vercel.app/partners")
-
       .then((res) => {
         setPartners(res.data);
+        setFiltered(res.data);
         setLoading(false);
       })
-      .catch(() => {
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
-  // --- Filter + Sort Logic ---
+  // Apply search + filters + sort (real-time)
+  useEffect(() => {
+    let result = [...partners];
 
-  const filteredPartners = partners
-    // 1️⃣ Search filter
-    .filter((p) => {
+    // Search
+    if (searchTerm) {
       const term = searchTerm.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name?.toLowerCase().includes(term) ||
+          p.subject?.toLowerCase().includes(term)
+      );
+    }
 
-      if (!searchTerm) {
-        return partners;
-      }
+    // Filter: Subject
+    if (selectedSubject) {
+      result = result.filter((p) => p.subject === selectedSubject);
+    }
 
-      const nameMatch = p.name?.toLowerCase().includes(term);
-      const subjectMatch = p.subject?.toLowerCase().includes(term);
+    // Filter: Study Mode
+    if (selectedMode) {
+      result = result.filter((p) => p.studyMode === selectedMode);
+    }
 
-      return nameMatch || subjectMatch;
-    })
+    // Sort: Experience
+    // Sort: Experience
+    const rank = { Beginner: 2, Intermediate: 1, Expert: 3 }; // Higher = more experienced
 
-    .sort((a, b) => {
-      const aRank = experienceRank[a.experienceLevel] || 0;
-      const bRank = experienceRank[b.experienceLevel] || 0;
+    result.sort((a, b) => {
+      const aRank = rank[a.experienceLevel] || 0;
+      const bRank = rank[b.experienceLevel] || 0;
 
-      if (sortOrder === "asc") {
-        return aRank - bRank;
+      if (sortOrder === "expert") {
+        return bRank - aRank; // Descending: Expert (3) first
       } else {
-        return bRank - aRank;
+        return aRank - bRank; // Ascending: Beginner (1) first
       }
     });
+
+    setFiltered(result);
+  }, [searchTerm, selectedSubject, selectedMode, sortOrder, partners]);
 
   if (loading) return <Loading />;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
-        {/* Sort Dropdown */}
-        <div className="flex items-center gap-2">
-          <label className="font-semibold">Sort by Experience:</label>
-          <select
-            className="select select-bordered select-sm"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-          >
-            <option value="asc"> High → Low</option>
-            <option value="desc">Low → High </option>
-          </select>
-        </div>
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      <h1 className="text-4xl font-bold text-center mb-8 text-primary">
+        Find Study Partners
+      </h1>
 
-        {/* Search Input */}
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search by name or subject..."
-            className="input input-bordered input-sm w-64"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={() => setSearchTerm(searchTerm.trim())}
-          >
-            Search
-          </button>
-        </div>
+      {/* Search + Filters */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <input
+          type="text"
+          placeholder="Search by name or subject..."
+          className="input input-bordered"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <select
+          className="select select-bordered"
+          value={selectedSubject}
+          onChange={(e) => setSelectedSubject(e.target.value)}
+        >
+          <option value="">All Subjects</option>
+          {subjects.map((s) => (
+            <option key={s}>{s}</option>
+          ))}
+        </select>
+
+        <select
+          className="select select-bordered"
+          value={selectedMode}
+          onChange={(e) => setSelectedMode(e.target.value)}
+        >
+          <option value="">All Study Modes</option>
+          {modes.map((m) => (
+            <option key={m}>{m}</option>
+          ))}
+        </select>
+
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+        >
+          <option value="expert">Beginners First</option>
+          <option value="beginner">Most Experienced First</option>
+        </select>
       </div>
 
-      {/* Partner Cards Grid */}
-      {filteredPartners.length === 0 ? (
-        <p className="text-center text-gray-500 mt-10">
-          😕 No partners found matching your search.
+      {/* Cards */}
+      {filtered.length === 0 ? (
+        <p className="text-center text-xl text-gray-500 py-20">
+          No partners found. Try changing filters!
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filteredPartners.map((partner) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {filtered.map((partner) => (
             <div
-              key={partner.id || partner._id}
-              className="card bg-base-100 shadow-md hover:shadow-lg transition duration-300 rounded-2xl overflow-hidden"
+              key={partner._id}
+              className="card bg-base-100 shadow-xl hover:shadow-2xl transition h-full flex flex-col"
             >
-              <figure className="px-4 pt-4">
+              <figure className="px-6 pt-6">
                 <img
-                  src={partner.profileimage}
+                  src={
+                    partner.profileimage ||
+                    "https://i.ibb.co.com/Yc3Wm9n/default-avatar.png"
+                  }
                   alt={partner.name}
-                  className="rounded-xl w-32 h-32 object-cover"
+                  className="rounded-full w-32 h-32 object-cover"
                 />
               </figure>
-              <div className="card-body items-center text-center">
-                <h2 className="card-title text-lg font-semibold">
-                  {partner.name}
-                </h2>
-                <p className="text-sm text-gray-600">
+              <div className="card-body text-center flex-1">
+                <h2 className="card-title justify-center">{partner.name}</h2>
+                <p>
                   <strong>Subject:</strong> {partner.subject}
                 </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Study Mode:</strong> {partner.studyMode}
+                <p>
+                  <strong>Mode:</strong> {partner.studyMode}
                 </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Experience:</strong> {partner.experienceLevel}
-                </p>
-                <div className="card-actions mt-3">
+                <div className="badge badge-primary mt-2">
+                  {partner.experienceLevel}
+                </div>
+                <div className="card-actions mt-4">
                   <Link
-                    to={`/partners/${partner._id || partner.id}`}
-                    className="btn btn-sm btn-outline btn-primary"
+                    to={`/partners/${partner._id}`}
+                    className="btn btn-primary w-full"
                   >
                     View Profile
                   </Link>
