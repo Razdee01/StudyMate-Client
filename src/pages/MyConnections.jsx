@@ -2,13 +2,13 @@ import React, { useEffect, useState, useContext } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
 import UpdatePartner from "../components/UpdatePartner";
+import { Trash2, Link as LinkIcon } from "lucide-react";
 
 const MyConnections = () => {
   const { user } = useContext(AuthContext);
   const [requests, setRequests] = useState([]);
   const [editingRequest, setEditingRequest] = useState(null);
 
-  // Fetch sent requests
   useEffect(() => {
     if (!user?.email) return;
 
@@ -17,7 +17,6 @@ const MyConnections = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        // Check if backend wraps requests in an object
         setRequests(Array.isArray(data) ? data : data.requests || []);
       })
       .catch((err) => {
@@ -25,16 +24,23 @@ const MyConnections = () => {
       });
   }, [user]);
 
-  // Delete request
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "This request will be deleted.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#82A762",
-      cancelButtonColor: "#2E2EFF",
+      confirmButtonColor: "#0ea5e9", // Primary blue
+      cancelButtonColor: "#ef4444", // Red
       confirmButtonText: "Yes, delete it!",
+      background:
+        document.documentElement.getAttribute("data-theme") === "dark"
+          ? "#1d232a"
+          : "#fff",
+      color:
+        document.documentElement.getAttribute("data-theme") === "dark"
+          ? "#fff"
+          : "#000",
     }).then((result) => {
       if (!result.isConfirmed) return;
 
@@ -57,68 +63,88 @@ const MyConnections = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-2xl sm:text-3xl font-semibold mb-6">
-        My Connections
-      </h2>
-
-      {requests.length === 0 ? (
-        <p className="text-center text-gray-500 mt-10">
-          You have no sent partner requests yet.
-        </p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border bg-white rounded-lg shadow-md text-sm sm:text-base">
-            <thead className="bg-gray-700 text-white">
-              <tr>
-                <th className="px-3 sm:px-4 py-2 border">Partner Name</th>
-                <th className="px-3 sm:px-4 py-2 border">Subject</th>
-                <th className="px-3 sm:px-4 py-2 border">Study Mode</th>
-                <th className="px-3 sm:px-4 py-2 border">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((req) => (
-                <tr key={req._id} className="text-center hover:bg-gray-100">
-                  <td className="border px-3 sm:px-4 py-2">
-                    {req.partnerName}
-                  </td>
-                  <td className="border px-3 sm:px-4 py-2">
-                    {req.partnerSubject}
-                  </td>
-                  <td className="border px-3 sm:px-4 py-2">{req.studyMode}</td>
-                  <td className="border px-3 sm:px-4 py-2">
-                    <button
-                      onClick={() => setEditingRequest(req)}
-                      className="bg-green-600 text-white px-2 sm:px-3 py-1 rounded mr-2"
-                    >
-                      Update
-                    </button>
-                    <button
-                      onClick={() => handleDelete(req._id)}
-                      className="bg-red-500 text-white px-2 sm:px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    // Changed bg-gray-50 to bg-base-200
+    <div className="p-4 sm:p-10 bg-base-200 min-h-screen">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center gap-3 mb-8">
+          <LinkIcon className="text-primary w-8 h-8" />
+          <h2 className="text-3xl font-bold text-base-content">
+            My Connections
+          </h2>
         </div>
-      )}
 
-      {editingRequest && (
-        <UpdatePartner
-          request={editingRequest}
-          onClose={() => setEditingRequest(null)}
-          onUpdate={(updatedReq) =>
-            setRequests((prev) =>
-              prev.map((r) => (r._id === updatedReq._id ? updatedReq : r))
-            )
-          }
-        />
-      )}
+        {requests.length === 0 ? (
+          <div className="card bg-base-100 shadow-xl p-10 text-center">
+            <p className="text-base-content/60 text-lg">
+              You have no sent partner requests yet.
+            </p>
+          </div>
+        ) : (
+          <div className="card bg-base-100 shadow-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              {/* Added DaisyUI table classes */}
+              <table className="table w-full">
+                {/* Table head uses base-300 for a subtle dark/light contrast */}
+                <thead className="bg-base-300 text-base-content">
+                  <tr>
+                    <th className="py-4">Partner Name</th>
+                    <th>Subject</th>
+                    <th>Study Mode</th>
+                    <th className="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-base-content">
+                  {requests.map((req) => (
+                    <tr
+                      key={req._id}
+                      className="hover:bg-base-200 transition-colors"
+                    >
+                      <td className="font-medium">{req.partnerName}</td>
+                      <td>
+                        <span className="badge badge-ghost">
+                          {req.partnerSubject}
+                        </span>
+                      </td>
+                      <td>
+                        <div
+                          className={`badge ${
+                            req.studyMode === "Online"
+                              ? "badge-primary"
+                              : "badge-secondary"
+                          } badge-outline`}
+                        >
+                          {req.studyMode}
+                        </div>
+                      </td>
+                      <td className="text-center">
+                        <button
+                          onClick={() => handleDelete(req._id)}
+                          className="btn btn-error btn-sm btn-outline gap-2 hover:text-white"
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {editingRequest && (
+          <UpdatePartner
+            request={editingRequest}
+            onClose={() => setEditingRequest(null)}
+            onUpdate={(updatedReq) =>
+              setRequests((prev) =>
+                prev.map((r) => (r._id === updatedReq._id ? updatedReq : r))
+              )
+            }
+          />
+        )}
+      </div>
     </div>
   );
 };

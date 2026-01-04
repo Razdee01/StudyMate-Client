@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 import { auth } from '../fireBase/fireBase.init';
+
 
 
 const AuthProvider = ({children}) => {
@@ -37,6 +46,12 @@ const AuthProvider = ({children}) => {
             unsubcribe()
         }
      },[])
+     const updateUserProfile = (name, photo) => {
+       return updateProfile(auth.currentUser, {
+         displayName: name,
+         photoURL: photo,
+       });
+     };
     const authInfo = {
       createUser,
       user,
@@ -44,7 +59,8 @@ const AuthProvider = ({children}) => {
       signIn,
       signInWithGoogle,
       setUser,
-       LogOut
+       LogOut,
+       updateUserProfile
     };
     return <AuthContext.Provider value={authInfo}>
         {children}

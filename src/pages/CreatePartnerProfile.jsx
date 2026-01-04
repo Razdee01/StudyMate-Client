@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 const CreatePartnerProfile = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -23,7 +24,7 @@ const CreatePartnerProfile = () => {
       email: form.email.value,
     };
 
-    fetch("study-mate-server-ten.vercel.app/partners", {
+    fetch("https://study-mate-server-ten.vercel.app/partners", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,8 +33,6 @@ const CreatePartnerProfile = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Partner added:", data);
-
         if (data.success) {
           Swal.fire({
             icon: "success",
@@ -42,7 +41,7 @@ const CreatePartnerProfile = () => {
               data.message ||
               "Your partner profile has been successfully created.",
             confirmButtonText: "OK",
-            confirmButtonColor: "#1E40AF",
+            confirmButtonColor: "#0ea5e9", // Matches your primary blue
           });
           navigation("/find-partners");
         } else {
@@ -66,133 +65,152 @@ const CreatePartnerProfile = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-start bg-gray-100 py-10">
-      <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-xl">
-        <h1 className="text-2xl font-bold mb-6 text-center">
+    // Changed bg-gray-100 to bg-base-200 for dark mode support
+    <div className="min-h-screen flex justify-center items-start bg-base-200 py-10 px-4">
+      {/* Changed bg-white to bg-base-100 for dark mode support */}
+      <div className="bg-base-100 p-8 rounded-2xl shadow-xl w-full max-w-xl">
+        <h1 className="text-3xl font-bold mb-6 text-center text-primary">
           Create Partner Profile
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <p className="text-center text-base-content/70 mb-8">
+          Share your details to connect with like-minded study partners.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Name */}
-          <div>
-            <label className="block mb-1 font-medium">Full Name</label>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">Full Name</span>
+            </label>
             <input
               type="text"
               name="name"
               placeholder="Your full name"
-              className="input input-bordered w-full"
+              className="input input-bordered focus:input-primary w-full"
               required
             />
           </div>
 
-          {/* Profile Image */}
-          <div>
-            <label className="block mb-1 font-medium">Profile Image URL</label>
-            <input
-              type="text"
-              name="profileImage"
-              placeholder="Image URL"
-              className="input input-bordered w-full"
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Profile Image */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold">
+                  Profile Image URL
+                </span>
+              </label>
+              <input
+                type="text"
+                name="profileImage"
+                placeholder="Image URL"
+                className="input input-bordered focus:input-primary w-full"
+                required
+              />
+            </div>
+
+            {/* Subject */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold">Subject</span>
+              </label>
+              <input
+                type="text"
+                name="subject"
+                placeholder="e.g., Programming"
+                className="input input-bordered focus:input-primary w-full"
+                required
+              />
+            </div>
           </div>
 
-          {/* Subject */}
-          <div>
-            <label className="block mb-1 font-medium">Subject</label>
-            <input
-              type="text"
-              name="subject"
-              placeholder="e.g., English, Math, Programming"
-              className="input input-bordered w-full"
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Study Mode */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold">Study Mode</span>
+              </label>
+              <select
+                name="studyMode"
+                className="select select-bordered focus:select-primary w-full"
+              >
+                <option>Online</option>
+                <option>Offline</option>
+              </select>
+            </div>
+
+            {/* Experience Level */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold">
+                  Experience Level
+                </span>
+              </label>
+              <select
+                name="experienceLevel"
+                className="select select-bordered focus:select-primary w-full"
+              >
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
           </div>
 
-          {/* Study Mode */}
-          <div>
-            <label className="block mb-1 font-medium">Study Mode</label>
-            <select name="studyMode" className="select select-bordered w-full">
-              <option>Online</option>
-              <option>Offline</option>
-            </select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Availability */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold">
+                  Availability Time
+                </span>
+              </label>
+              <input
+                type="text"
+                name="availability"
+                placeholder="e.g., 6-9 PM"
+                className="input input-bordered focus:input-primary w-full"
+              />
+            </div>
+
+            {/* Location */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-semibold">Location</span>
+              </label>
+              <input
+                type="text"
+                name="location"
+                placeholder="City or Area"
+                className="input input-bordered focus:input-primary w-full"
+              />
+            </div>
           </div>
 
-          {/* Availability */}
-          <div>
-            <label className="block mb-1 font-medium">Availability Time</label>
-            <input
-              type="text"
-              name="availability"
-              placeholder="e.g., Evening 6-9 PM"
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          {/* Location */}
-          <div>
-            <label className="block mb-1 font-medium">Location</label>
-            <input
-              type="text"
-              name="location"
-              placeholder="City or Area"
-              className="input input-bordered w-full"
-            />
-          </div>
-
-          {/* Experience Level */}
-          <div>
-            <label className="block mb-1 font-medium">Experience Level</label>
-            <select
-              name="experienceLevel"
-              className="select select-bordered w-full"
-            >
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Expert</option>
-            </select>
-          </div>
-
-          {/* Rating */}
-          <div>
-            <label className="block mb-1 font-medium">Rating</label>
-            <input
-              type="number"
-              name="rating"
-              value={0}
-              className="input input-bordered w-full"
-              min={0}
-              max={5}
-              readOnly
-            />
-          </div>
-
-          {/* Partner Count */}
-          <div>
-            <label className="block mb-1 font-medium">Partner Count</label>
-            <input
-              type="number"
-              name="partnerCount"
-              value={0}
-              className="input input-bordered w-full"
-              min={0}
-              readOnly
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block mb-1 font-medium">Email</label>
+          {/* Email (Read Only) */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold text-base-content/50">
+                Your Registered Email
+              </span>
+            </label>
             <input
               type="email"
               name="email"
               value={user?.email || ""}
-              className="input input-bordered w-full"
+              className="input input-bordered bg-base-300 cursor-not-allowed w-full opacity-70"
               readOnly
             />
           </div>
 
+          {/* Hidden/Default inputs to maintain functionality */}
+          <input type="hidden" name="rating" value={0} />
+          <input type="hidden" name="partnerCount" value={0} />
+
           {/* Submit Button */}
-          <button type="submit" className="btn btn-primary w-full mt-4">
+          <button
+            type="submit"
+            className="btn btn-primary w-full mt-6 text-white shadow-lg"
+          >
             Create Profile
           </button>
         </form>

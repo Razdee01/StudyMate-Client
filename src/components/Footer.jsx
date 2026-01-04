@@ -5,6 +5,7 @@ import {
   FaXTwitter,
   FaGithub,
 } from "react-icons/fa6";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
@@ -25,9 +26,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Left: Logo + Description */}
           <div className="text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
+            <div className="flex items-center justify-center md:justify-start gap-3 mb-4 ">
               <img
-                className="h-12 w-12 rounded-xl"
+                className="h-12 w-12 rounded-xl hover:scale-105 transition-transform"
                 src="https://i.ibb.co.com/Pv09Fmv3/Your-paragraph-text.png"
                 alt="StudyMate Logo"
               />
@@ -47,32 +48,19 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3 text-slate-300">
               <li>
-                <a href="/" className="hover:text-sky-400 transition">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/find-partners"
-                  className="hover:text-sky-400 transition"
-                >
-                  Find Partners
-                </a>
-              </li>
-              <li>
-                <a href="/about" className="hover:text-sky-400 transition">
+                <Link to="/about" className="hover:text-sky-400 transition">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/privacy" className="hover:text-sky-400 transition">
-                  Privacy Policy
-                </a>
+                <Link to="/terms" className="hover:text-sky-400 transition">
+                  Legal Center
+                </Link>
               </li>
               <li>
-                <a href="/terms" className="hover:text-sky-400 transition">
-                  Terms of Service
-                </a>
+                <Link to="/contact" className="hover:text-sky-400 transition">
+                  Contact Us
+                </Link>
               </li>
             </ul>
           </div>
@@ -134,4 +122,3 @@ const Footer = () => {
 };
 
 export default Footer;
-

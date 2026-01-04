@@ -2,13 +2,24 @@ import React, { use, useState } from "react";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import { AuthContext } from "../contexts/AuthContext";
+import { MapPin, BookOpen, Clock, Award, Users, Star } from "lucide-react";
 
 const PartnerDetails = () => {
   const { user } = use(AuthContext);
   const partner = useLoaderData();
   const [req, setReq] = useState(false);
+
   const handleRequest = () => {
-    
+    if (user?.email === partner.email) {
+      Swal.fire({
+        icon: "warning",
+        title: "Action Not Allowed",
+        text: "You cannot send a request to yourself!",
+        confirmButtonColor: "#0ea5e9",
+      });
+      return;
+    }
+
     fetch("https://study-mate-server-ten.vercel.app/requests", {
       method: "POST",
       headers: {
@@ -27,19 +38,12 @@ const PartnerDetails = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (user?.email === partner.email) {
-          Swal.fire({
-            icon: "warning",
-            title: "You cannot send a request to yourself!",
-          });
-          return;
-        }
-
         if (data.success) {
           Swal.fire({
-            title: `Partner Request Sent to ${partner.name}!`,
+            title: `Success!`,
+            text: `Partner Request Sent to ${partner.name}`,
             icon: "success",
-            draggable: true,
+            confirmButtonColor: "#0ea5e9",
           });
           setReq(true);
           partner.partnerCount += 1;
@@ -49,62 +53,102 @@ const PartnerDetails = () => {
         console.error("Error:", error);
       });
   };
-  console.log("Sending request for partnerId:", partner._id);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg transform transition duration-300 hover:scale-105">
+    // Changed bg-gray-100 to bg-base-200
+    <div className="min-h-screen flex items-center justify-center bg-base-200 p-4 transition-colors duration-300">
+      {/* Changed bg-white to bg-base-100 */}
+      <div className="bg-base-100 shadow-2xl rounded-3xl p-8 w-full max-w-lg border border-base-300">
         {/* Profile Section */}
-        <div className="flex flex-col items-center text-center mb-6">
-          <img
-            src={partner.profileimage}
-            alt={partner.name}
-            className="w-32 h-32 rounded-full border-4 border-green-500 shadow-md mb-4 object-cover"
-          />
-          <h2 className="text-2xl font-bold text-gray-800 mb-1">
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="avatar mb-4">
+            <div className="w-32 h-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-4">
+              <img
+                src={partner.profileimage}
+                alt={partner.name}
+                className="object-cover"
+              />
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-base-content mb-1">
             {partner.name}
           </h2>
-          <p className="text-yellow-500 mb-2">⭐ {partner.rating}</p>
-          <p className="text-gray-500 text-sm">{partner.location}</p>
-        </div>
-
-        {/* Details Section */}
-        <div className="bg-gray-50 p-4 rounded-xl space-y-2 mb-6">
-          <p>
-            <span className="font-semibold text-gray-700">Subject:</span>{" "}
-            {partner.subject}
-          </p>
-          <p>
-            <span className="font-semibold text-gray-700">Study Mode:</span>{" "}
-            {partner.studyMode}
-          </p>
-          <p>
-            <span className="font-semibold text-gray-700">Availability:</span>{" "}
-            {partner.availabilityTime}
-          </p>
-          <p>
-            <span className="font-semibold text-gray-700">
-              Experience Level:
-            </span>{" "}
-            {partner.experienceLevel}
-          </p>
-          <p>
-            <span className="font-semibold text-gray-700">Partner Count:</span>{" "}
-            {partner.partnerCount}
+          <div className="flex items-center gap-2 text-orange-400 font-bold mb-2">
+            <Star size={18} fill="currentColor" />
+            <span>{partner.rating} / 5.0</span>
+          </div>
+          <p className="flex items-center justify-center gap-1 text-base-content/60 text-sm italic">
+            <MapPin size={14} /> {partner.location}
           </p>
         </div>
 
-        {/* Action Button */}
+        {/* Details Section - Changed bg-gray-50 to bg-base-200 */}
+        <div className="bg-base-200 p-6 rounded-2xl space-y-4 mb-8">
+          <div className="flex items-center justify-between border-b border-base-300 pb-2">
+            <span className="flex items-center gap-2 font-semibold text-base-content/70">
+              <BookOpen size={18} className="text-primary" /> Subject
+            </span>
+            <span className="text-base-content font-medium">
+              {partner.subject}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between border-b border-base-300 pb-2">
+            <span className="flex items-center gap-2 font-semibold text-base-content/70">
+              <Users size={18} className="text-primary" /> Mode
+            </span>
+            <span
+              className={`badge ${
+                partner.studyMode === "Online"
+                  ? "badge-primary"
+                  : "badge-secondary"
+              } badge-outline`}
+            >
+              {partner.studyMode}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between border-b border-base-300 pb-2">
+            <span className="flex items-center gap-2 font-semibold text-base-content/70">
+              <Clock size={18} className="text-primary" /> Availability
+            </span>
+            <span className="text-base-content">
+              {partner.availabilityTime}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between border-b border-base-300 pb-2">
+            <span className="flex items-center gap-2 font-semibold text-base-content/70">
+              <Award size={18} className="text-primary" /> Level
+            </span>
+            <span className="text-base-content">{partner.experienceLevel}</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-2 font-semibold text-base-content/70">
+              <Users size={18} className="text-primary" /> Total Partners
+            </span>
+            <span className="text-base-content font-bold">
+              {partner.partnerCount}
+            </span>
+          </div>
+        </div>
+
+        {/* Action Button - Changed green-600 to btn-primary */}
         <button
           onClick={handleRequest}
           disabled={req}
-          className={`w-full py-2 rounded-xl shadow-md transition duration-300 ${
+          className={`btn btn-block btn-lg rounded-2xl transition-all duration-300 ${
             req
-              ? "bg-gray-400 text-white  "
-              : "bg-green-600 hover:bg-green-700 text-white"
+              ? "btn-disabled bg-base-300 text-base-content/30"
+              : "btn-primary text-white shadow-lg hover:shadow-primary/40"
           }`}
         >
-          {req ? "Request Sent" : "Send Partner Request"}
+          {req ? (
+            <span className="flex items-center gap-2">✓ Request Sent</span>
+          ) : (
+            "Send Partner Request"
+          )}
         </button>
       </div>
     </div>

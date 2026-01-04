@@ -18,6 +18,9 @@ import Profile from "./components/Profile.jsx";
 import ErrorPage from "./components/ErrorPage.jsx";
 import DashBoard from "./components/DashBoard.jsx";
 import About from "./pages/About.jsx";
+import TermsOfService from "./pages/TermsOfService.jsx";
+import Contact from "./pages/Contact.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -32,6 +35,8 @@ const router = createBrowserRouter([
       { path: "/profile", Component: Profile },
       { path: "/dashboard", Component: DashBoard },
       { path: "/about", Component: About },
+      { path: "/terms", Component: TermsOfService },
+      { path: "/contact", Component: Contact },
       {
         path: "partners/:id",
         element: (
