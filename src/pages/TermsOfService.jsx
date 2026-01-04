@@ -29,7 +29,7 @@ const TermsOfService = () => {
                   : "btn-ghost rounded-xl"
               }`}
             >
-              <Scale size={18} className="mr-2" /> Terms of Service
+              <Scale size={16} className="md:mr-2" /> Terms of Service
             </button>
             <button
               onClick={() => setActiveTab("privacy")}
@@ -39,7 +39,7 @@ const TermsOfService = () => {
                   : "btn-ghost rounded-xl"
               }`}
             >
-              <ShieldCheck size={18} className="mr-2" /> Privacy Policy
+              <ShieldCheck size={16} className=" md:mr-2" />Privacy Policy
             </button>
           </div>
         </div>

@@ -116,12 +116,12 @@ const NavBar = () => {
           <Link to="/" className="flex items-center gap-2 group">
             <div className="p-1.5  rounded-xl group-hover:rotate-12 transition-transform">
               <img
-                className="h-10 w-10 rounded-xl"
+                className="md:h-10 md:w-10  rounded-xl"
                 src="https://i.ibb.co.com/Pv09Fmv3/Your-paragraph-text.png"
                 alt="Logo"
               />
             </div>
-            <span className="text-xl lg:text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">
+            <span className="text-sm lg:text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-sky-400 to-blue-600">
               StudyMate
             </span>
           </Link>

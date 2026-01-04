@@ -71,14 +71,7 @@ const Footer = () => {
               Follow Us
             </h3>
             <div className="flex justify-center md:justify-end gap-5 text-2xl">
-              <a
-                href="https://www.facebook.com/razdee.rahman"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-sky-400 transition-transform transform hover:scale-110"
-              >
-                <FaFacebookF />
-              </a>
+            
               <a
                 href="https://x.com/RahmanRazdee"
                 target="_blank"
