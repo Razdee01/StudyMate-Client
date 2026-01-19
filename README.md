@@ -2,7 +2,7 @@
 
 StudyMate is a modern, full-stack web application designed to help students find the perfect study partners. By matching users based on subjects, learning preferences, and location, StudyMate transforms the solitary learning experience into a collaborative journey.
 
-**Live Link:** [https://unique-mooncake-0634d9.netlify.app/]  
+**Live Link:** [https://study-mate-client-7fnb.vercel.app/]  
 **Server API:** [https://study-mate-server-ten.vercel.app/]
 
 ---
