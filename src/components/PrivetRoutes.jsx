@@ -1,7 +1,8 @@
 import React, { use } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Navigate } from 'react-router';
-import Loading from './loading';
+import Loading from './Loading';
+
 
 const PrivetRoutes = ({children}) => {
    const {user,loading}=use(AuthContext);
